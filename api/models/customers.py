@@ -13,3 +13,4 @@ class Customer(Base):
     address = Column(String(200), nullable=False)
 
     orders = relationship("Order", back_populates="customer")
+    reviews = relationship("Review", back_populates="customer")

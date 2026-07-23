@@ -1,14 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from sqlalchemy.exc import SQLAlchemyError
-from ..models import recipes as model
+from ..models import promotions as model
 
 
 def create(db: Session, request):
-    new_item = model.Recipe(
-        sandwich_id=request.sandwich_id,
-        resource_id=request.resource_id,
-        amount=request.amount
+    new_item = model.Promotion(
+        promotion_code=request.promotion_code,
+        expiration_date=request.expiration_date
     )
 
     try:
@@ -24,11 +23,11 @@ def create(db: Session, request):
 
 
 def read_all(db: Session):
-    return db.query(model.Recipe).all()
+    return db.query(model.Promotion).all()
 
 
 def read_one(db: Session, item_id):
-    item = db.query(model.Recipe).filter(model.Recipe.id == item_id).first()
+    item = db.query(model.Promotion).filter(model.Promotion.id == item_id).first()
 
     if not item:
         raise HTTPException(status_code=404, detail="Id not found!")
@@ -37,7 +36,7 @@ def read_one(db: Session, item_id):
 
 
 def update(db: Session, item_id, request):
-    item = db.query(model.Recipe).filter(model.Recipe.id == item_id)
+    item = db.query(model.Promotion).filter(model.Promotion.id == item_id)
 
     if not item.first():
         raise HTTPException(status_code=404, detail="Id not found!")
@@ -50,7 +49,7 @@ def update(db: Session, item_id, request):
 
 
 def delete(db: Session, item_id):
-    item = db.query(model.Recipe).filter(model.Recipe.id == item_id)
+    item = db.query(model.Promotion).filter(model.Promotion.id == item_id)
 
     if not item.first():
         raise HTTPException(status_code=404, detail="Id not found!")

@@ -14,3 +14,4 @@ class Sandwich(Base):
     category = Column(String(50), nullable=False)
     recipes = relationship("Recipe", back_populates="sandwich")
     order_details = relationship("OrderDetail", back_populates="sandwich")
+    reviews = relationship("Review", back_populates="sandwich")

@@ -1,14 +1,15 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from sqlalchemy.exc import SQLAlchemyError
-from ..models import recipes as model
+from ..models import payments as model
 
 
 def create(db: Session, request):
-    new_item = model.Recipe(
-        sandwich_id=request.sandwich_id,
-        resource_id=request.resource_id,
-        amount=request.amount
+    new_item = model.Payment(
+        order_id=request.order_id,
+        card_last_four=request.card_last_four,
+        transaction_status=request.transaction_status,
+        payment_type=request.payment_type
     )
 
     try:
@@ -24,11 +25,18 @@ def create(db: Session, request):
 
 
 def read_all(db: Session):
-    return db.query(model.Recipe).all()
+    try:
+        result = db.query(model.Payment).all()
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+
+    return result
 
 
 def read_one(db: Session, item_id):
-    item = db.query(model.Recipe).filter(model.Recipe.id == item_id).first()
+    item = db.query(model.Payment).filter(model.Payment.id == item_id).first()
 
     if not item:
         raise HTTPException(status_code=404, detail="Id not found!")
@@ -37,7 +45,7 @@ def read_one(db: Session, item_id):
 
 
 def update(db: Session, item_id, request):
-    item = db.query(model.Recipe).filter(model.Recipe.id == item_id)
+    item = db.query(model.Payment).filter(model.Payment.id == item_id)
 
     if not item.first():
         raise HTTPException(status_code=404, detail="Id not found!")
@@ -50,7 +58,7 @@ def update(db: Session, item_id, request):
 
 
 def delete(db: Session, item_id):
-    item = db.query(model.Recipe).filter(model.Recipe.id == item_id)
+    item = db.query(model.Payment).filter(model.Payment.id == item_id)
 
     if not item.first():
         raise HTTPException(status_code=404, detail="Id not found!")

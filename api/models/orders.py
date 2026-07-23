@@ -14,5 +14,8 @@ class Order(Base):
     tracking_number = Column(String(50), unique=True, nullable=False)
     order_status = Column(String(25), nullable=False)
     total_price = Column(DECIMAL(6, 2), nullable=False, server_default='0.00')
+    promotion_id = Column(Integer, ForeignKey("promotions.id"), nullable=True)
     customer = relationship("Customer", back_populates="orders")
     order_details = relationship("OrderDetail", back_populates="order")
+    payment = relationship("Payment", back_populates="order", uselist=False)
+    promotion = relationship("Promotion", back_populates="orders")
