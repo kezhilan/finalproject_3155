@@ -11,6 +11,8 @@ class Order(Base):
     customer_id = Column(Integer, ForeignKey("customers.id"))
     order_date = Column(DATETIME, nullable=False, server_default=str(datetime.now()))
     description = Column(String(300))
-    
+    tracking_number = Column(String(50), unique=True, nullable=False)
+    order_status = Column(String(25), nullable=False)
+    total_price = Column(DECIMAL(6, 2), nullable=False, server_default='0.00')
     customer = relationship("Customer", back_populates="orders")
     order_details = relationship("OrderDetail", back_populates="order")

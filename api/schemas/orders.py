@@ -8,6 +8,9 @@ from .customers import Customer
 
 class OrderBase(BaseModel):
     customer_id: int
+    tracking_number: str
+    order_status: str
+    total_price: float
     description: Optional[str] = None
 
 
@@ -16,9 +19,11 @@ class OrderCreate(OrderBase):
 
 
 class OrderUpdate(BaseModel):
-    customer_name: Optional[str] = None
+    customer_id: Optional[int] = None
+    tracking_number: Optional[str] = None
+    order_status: Optional[str] = None
+    total_price: Optional[float] = None
     description: Optional[str] = None
-
 
 class Order(OrderBase):
     id: int
