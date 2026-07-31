@@ -16,8 +16,12 @@ def db_session(mocker):
 def test_create_order(db_session):
     # Create a sample order
     order_data = {
-        "customer_name": "John Doe",
-        "description": "Test order"
+        "customer_id": 1,
+        "tracking_number": "100",
+        "order_status": "Pending",
+        "total_price": 15.99,
+        "description": "Lunch order",
+        "promotion_id": 1
     }
 
     order_object = model.Order(**order_data)
@@ -27,5 +31,9 @@ def test_create_order(db_session):
 
     # Assertions
     assert created_order is not None
-    assert created_order.customer_name == "John Doe"
-    assert created_order.description == "Test order"
+    assert created_order.customer_id == 1
+    assert created_order.tracking_number == "100"
+    assert created_order.order_status == "Pending"
+    assert created_order.total_price == 15.99
+    assert created_order.description == "Lunch order"
+    assert created_order.promotion_id == 1
