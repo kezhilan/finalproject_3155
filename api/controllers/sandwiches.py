@@ -83,3 +83,12 @@ def delete(db: Session, item_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def read_category(db: Session, category: str):
+
+    items = db.query(model.Sandwich).filter(model.Sandwich.category == category).all()
+
+    if not items:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No sandwiches found.")
+
+    return items

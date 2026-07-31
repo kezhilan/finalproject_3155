@@ -35,3 +35,7 @@ def update(item_id: int, request: schema.SandwichUpdate, db: Session = Depends(g
 @router.delete("/{item_id}")
 def delete(item_id: int, db: Session = Depends(get_db)):
     return controller.delete(db=db, item_id=item_id)
+
+@router.get("/category/{category}", response_model=list[schema.Sandwich])
+def read_category(category: str, db: Session = Depends(get_db)):
+    return controller.read_category(db=db, category=category)

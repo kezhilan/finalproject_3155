@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import func
 
 
 def create(db: Session, request):
@@ -70,3 +71,24 @@ def delete(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def read_tracking(db: Session, tracking_number: str):
+    item = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Tracking number not found!")
+
+    return item
+
+def revenue_by_day(db: Session, order_date):
+
+    revenue = db.query(func.sum(model.Order.total_price)).filter(func.date(model.Order.order_date) == order_date).scalar()
+
+    return {
+        "date": order_date,
+        "revenue": revenue or 0
+    }
+
+def orders_between_dates(db: Session, start_date, end_date):
+
+    return db.query(model.Order).filter(model.Order.order_date >= start_date, model.Order.order_date <= end_date).all()
